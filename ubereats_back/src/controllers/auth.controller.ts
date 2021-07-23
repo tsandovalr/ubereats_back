@@ -8,7 +8,7 @@ import User from '../models/User';
 export const signUp = async (req: Request, res: Response): Promise<Response> => {
     const { email, name, number, role, password } = req.body;
     try {
-        if (!email || !name || !number || role|| !password) return res.status(422).json({
+        if (!email || !name || !number || !role|| !password) return res.status(422).json({
             status: 422,
             error: 'Please complete all fields'
         });

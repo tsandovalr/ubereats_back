@@ -4,7 +4,7 @@ export default {
     secretOrKey: process.env.JWT_SECRET || "somesecrettoken",
 
     DB: {
-        URI: process.env.MONGODB_URI || "mongodb+srv://moviles:asd123@cluster0.eejed.mongodb.net/ubereats?retryWrites=true&w=majority",
+        URI: process.env.MONGODB_URI || "mongodb+srv://tsandovalromay:sanandreas@cluster0.nezxj.mongodb.net/ubereats?retryWrites=true&w=majority",
         
         USER: process.env.MONGODB_USER  || "moviles",
         
