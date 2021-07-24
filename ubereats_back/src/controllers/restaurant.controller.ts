@@ -1,30 +1,31 @@
 import { Request, Response } from 'express';
+import Restaurant from '../models/Restaurant';
 
-import Meal from '../models/Meal';
+import Meal from '../models/Restaurant';
 import User from '../models/User';
 const _ = require("lodash");
 
 
 
-// Get list of meals
+// Get list of restaurants
 
-export const getMeals = async (req: any, res: Response) => {
+export const getRestaurants = async (req: any, res: Response) => {
   const {_id}=req.meal;
   try {
-    const meals = await Meal.find({});
-    return res.status(200).json({ status: 200, meals });
+    const restaurants = await Restaurant.find({});
+    return res.status(200).json({ status: 200, restaurants });
 } catch (e) {
     console.error(e);
     return res.status(500).json({ status: 500, message: 'Internal server error', error: e });
 };
 };
 
-// Get a single meal
-export const getMeal = async (req: any, res: Response) => {
+// Get a single restaurant
+export const getRestaurant = async (req: any, res: Response) => {
   const {_id}=req.meal;
   try {
-    const meal = await Meal.find({usermeals: _id});
-    return res.status(200).json({ status: 200, meal });
+    const restaurant = await Restaurant.find({usermeals: _id});
+    return res.status(200).json({ status: 200, restaurant });
 } catch (e) {
     console.error(e);
     return res.status(500).json({ status: 500, message: 'Internal server error', error: e });
@@ -32,8 +33,8 @@ export const getMeal = async (req: any, res: Response) => {
 };
 
 //create meal
-export const createMeal = async (req: any, res: Response) => {
-  const {_id}=req.meal;
+export const createRestaurant = async (req: any, res: Response) => {
+  const {_id}=req.restaurant;
   try {
     const user = await User.findOne({ _id: req.user.id });
       if (user.role !== "admin")
@@ -43,8 +44,8 @@ export const createMeal = async (req: any, res: Response) => {
             "Your request was processed but only admins are allowed to add or remove meals!"
           );
           else {
-      const meal = await Meal.create({usermeals: _id});
-      return res.status(200).json({ status: 200, meal }); };
+      const restaurant = await Restaurant.create({usermeals: _id});
+      return res.status(200).json({ status: 200, restaurant }); };
 } catch (e) {
     console.error(e);
     return res.status(500).json({ status: 500, message: 'Internal server error', error: e });
@@ -52,10 +53,10 @@ export const createMeal = async (req: any, res: Response) => {
 };
 
 
-// Updates an existing meal in the DB.
+// Updates an existing restaurant in the DB.
 
-export const updateMeal = async (req: any, res: Response) => {
-  const { name, price, description} = req.body;
+export const updateRestaurant = async (req: any, res: Response) => {
+  const { name, type, description, url } = req.body;
   const { _id } = req.meal;
   const { id } = req.params;
   try {
@@ -64,16 +65,17 @@ export const updateMeal = async (req: any, res: Response) => {
     return res
       .status(401)
       .json(
-        "Your request was processed but only admins are allowed to add or remove meals!"
+        "Your request was processed but only admins are allowed to update restaurants!"
       );
       else {
-      const meal = await Meal.findByIdAndUpdate(id, {
+      const restaurant = await Restaurant.findByIdAndUpdate(id, {
           name,
-          price,
+          type,
           description,
-          usermeals: _id
+          url,
+          usersrestaurants: _id
       }, { new: true });
-      return res.status(200).json({ status: 200, message: 'Meal successfully updated', meal }); };
+      return res.status(200).json({ status: 200, message: 'Restaurant successfully updated', restaurant }); };
   } catch (e) {
       console.error(e);
       return res.status(500).json({ status: 500, message: 'Internal server error', error: e });
@@ -81,9 +83,9 @@ export const updateMeal = async (req: any, res: Response) => {
 };
 
 
-// Deletes a meal from the DB.
+// Deletes a restaurant from the DB.
 
-export const deleteMeal = async (req: Request, res: Response) => {
+export const deleteRestaurant = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const user = await User.findOne({ _id: req.user.id });
@@ -91,11 +93,11 @@ export const deleteMeal = async (req: Request, res: Response) => {
     return res
       .status(401)
       .json(
-        "Your request was processed but only admins are allowed to add or remove meals!"
+        "Your request was processed but only admins are allowed to add or remove restaurants!"
       );
       else{
       await Meal.findByIdAndDelete(id);
-      return res.status(200).json({ status: 200, message: 'Meal successfully deleted' }); };
+      return res.status(200).json({ status: 200, message: 'Restaurant successfully deleted' }); };
   } catch (e) {
       console.error(e);
       return res.status(500).json({ status: 500, message: 'Internal server error', error: e });
