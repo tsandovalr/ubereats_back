@@ -9,7 +9,7 @@ const _ = require("lodash");
 // Get list of meals
 
 export const getMeals = async (req: any, res: Response) => {
-  const {_id}=req.meal;
+  
   try {
     const meals = await Meal.find({});
     return res.status(200).json({ status: 200, meals });
@@ -33,18 +33,19 @@ export const getMeal = async (req: any, res: Response) => {
 
 //create meal
 export const createMeal = async (req: any, res: Response) => {
-  const {_id}=req.meal;
+  const {name,price,description,url}=req.body;
+
   try {
-    const user = await User.findOne({ _id: req.user.id });
-      if (user.role !== "admin")
-        return res
-          .status(401)
-          .json(
-            "Your request was processed but only admins are allowed to add or remove meals!"
-          );
-          else {
-      const meal = await Meal.create({usermeals: _id});
-      return res.status(200).json({ status: 200, meal }); };
+    
+          const newMeal = new Meal ({
+            name,
+            price,
+            description,
+            url
+          });
+          await newMeal.save();
+      
+      return res.status(200).json({ status: 200,message: 'Meal successfully created', meal: newMeal }); 
 } catch (e) {
     console.error(e);
     return res.status(500).json({ status: 500, message: 'Internal server error', error: e });
@@ -58,9 +59,10 @@ export const updateMeal = async (req: any, res: Response) => {
   const { name, price, description} = req.body;
   const { _id } = req.meal;
   const { id } = req.params;
+  const {role}=req.user.role;
   try {
     const user = await User.findOne({ _id: req.user.id });
-    if (user.role !== "admin")
+    if (role !== "admin")
     return res
       .status(401)
       .json(
@@ -83,11 +85,12 @@ export const updateMeal = async (req: any, res: Response) => {
 
 // Deletes a meal from the DB.
 
-export const deleteMeal = async (req: Request, res: Response) => {
+export const deleteMeal = async (req: any, res: Response) => {
   const { id } = req.params;
+  const {role}=req.user.role;
   try {
     const user = await User.findOne({ _id: req.user.id });
-    if (user.role !== "admin")
+    if (role !== "admin")
     return res
       .status(401)
       .json(

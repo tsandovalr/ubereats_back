@@ -35,9 +35,10 @@ export const getRestaurant = async (req: any, res: Response) => {
 //create meal
 export const createRestaurant = async (req: any, res: Response) => {
   const {_id}=req.restaurant;
+  const {role}=req.user.role;
   try {
     const user = await User.findOne({ _id: req.user.id });
-      if (user.role !== "admin")
+      if (role !== "admin")
         return res
           .status(401)
           .json(
@@ -59,9 +60,10 @@ export const updateRestaurant = async (req: any, res: Response) => {
   const { name, type, description, url } = req.body;
   const { _id } = req.meal;
   const { id } = req.params;
+  const {role}=req.user.role;
   try {
     const user = await User.findOne({ _id: req.user.id });
-    if (user.role !== "admin")
+    if (role !== "admin")
     return res
       .status(401)
       .json(
@@ -85,11 +87,12 @@ export const updateRestaurant = async (req: any, res: Response) => {
 
 // Deletes a restaurant from the DB.
 
-export const deleteRestaurant = async (req: Request, res: Response) => {
+export const deleteRestaurant = async (req: any, res: Response) => {
   const { id } = req.params;
+  const {role}=req.user.role;
   try {
     const user = await User.findOne({ _id: req.user.id });
-    if (user.role !== "admin")
+    if (role !== "admin")
     return res
       .status(401)
       .json(

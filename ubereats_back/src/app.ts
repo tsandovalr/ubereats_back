@@ -3,14 +3,20 @@ import express from 'express';
 import passport from 'passport';
 import cors from 'cors';
 import passportMiddleware from './middlewares/passport';
+import dotenv from 'dotenv';
 
 const app = express();
 
 import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
+import mealRoutes from './routes/meal';
+import restaurantRoutes from './routes/restaurant';
 
 //settings
 app.set('port', process.env.PORT || 3000);
+
+//env
+dotenv.config({ path: './config/config.env' });
 
 //middlewares
 app.use(morgan('dev'));
@@ -28,6 +34,8 @@ app.get('/', (req, res) => {
     res.send(`La API esta en http://localhost:${app.get('port')}`)
 });
 app.use(authRoutes);
+app.use(mealRoutes);
+app.use(restaurantRoutes);
 app.use(userRoutes);
 
 export default app;
