@@ -10,7 +10,7 @@ const _ = require("lodash");
 // Get list of restaurants
 
 export const getRestaurants = async (req: any, res: Response) => {
-  const {_id}=req.meal;
+  
   try {
     const restaurants = await Restaurant.find({});
     return res.status(200).json({ status: 200, restaurants });
@@ -22,9 +22,9 @@ export const getRestaurants = async (req: any, res: Response) => {
 
 // Get a single restaurant
 export const getRestaurant = async (req: any, res: Response) => {
-  const {_id}=req.meal;
+  const {id}=req.params;
   try {
-    const restaurant = await Restaurant.find({usermeals: _id});
+    const restaurant = await Restaurant.findById(id);
     return res.status(200).json({ status: 200, restaurant });
 } catch (e) {
     console.error(e);
@@ -32,23 +32,24 @@ export const getRestaurant = async (req: any, res: Response) => {
 };
 };
 
-//create meal
+//create restaurant
 export const createRestaurant = async (req: any, res: Response) => {
-  const {_id}=req.restaurant;
-  const {role}=req.user.role;
+  const {name,type,description,address,url}=req.body;
   try {
-    const user = await User.findOne({ _id: req.user.id });
-      if (role !== "admin")
-        return res
-          .status(401)
-          .json(
-            "Your request was processed but only admins are allowed to add or remove meals!"
-          );
-          else {
-      const restaurant = await Restaurant.create({usermeals: _id});
-      return res.status(200).json({ status: 200, restaurant }); };
+    const newRestaurant = new Restaurant ({
+      name,
+      type,
+      description,
+      address,
+      url
+    });
+    await newRestaurant.save();
+      return res.status(200).json({ status: 200, message: 'Restaurant succesfully created', restaurant: newRestaurant }); 
 } catch (e) {
     console.error(e);
+    if (e.code === 11000) {
+      return res.status(400).json({ error: 'This restaurant already exists' });
+    }
     return res.status(500).json({ status: 500, message: 'Internal server error', error: e });
 };
 };

@@ -38,12 +38,12 @@ const restaurantSchema = new Schema({
         type:String, 
         required : true 
     },
-    _meals: [{ type: Schema.Types.ObjectId, ref: "Meal" }],
+    meals: [{ type: Schema.Types.ObjectId, ref: "Meal" }],
     usersrestaurants: {type: Schema.Types.ObjectId}
 });
 
 // Geocode & create location
-restaurantSchema.pre('save', async function(this:IRestaurantDocument)  {
+restaurantSchema.pre('save', async function(this:IRestaurantDocument,next)  {
 
     const loc = await geocoder.geocode(this.address);
     this.location = {
@@ -53,7 +53,7 @@ restaurantSchema.pre('save', async function(this:IRestaurantDocument)  {
     };
   
     // Do not save address
-    this.address = undefined;
+    next();
    
   });
 

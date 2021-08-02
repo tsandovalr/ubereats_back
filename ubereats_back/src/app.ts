@@ -11,6 +11,7 @@ import authRoutes from './routes/auth';
 import userRoutes from './routes/user';
 import mealRoutes from './routes/meal';
 import restaurantRoutes from './routes/restaurant';
+import orderRoutes from './routes/order';
 
 //settings
 app.set('port', process.env.PORT || 3000);
@@ -36,6 +37,7 @@ app.get('/', (req, res) => {
 app.use(authRoutes);
 app.use(mealRoutes);
 app.use(restaurantRoutes);
+app.use(orderRoutes);
 app.use(userRoutes);
 
 export default app;

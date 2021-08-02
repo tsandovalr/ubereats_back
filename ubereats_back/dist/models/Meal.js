@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const mealSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
+    restaurant: { type: mongoose_1.Schema.Types.ObjectId, ref: 'restaurant', required: true },
     price: { type: Number, required: true },
     description: { type: String, required: true },
     url: { type: String, required: true },

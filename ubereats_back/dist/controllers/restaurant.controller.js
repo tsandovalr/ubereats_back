@@ -45,24 +45,25 @@ const getRestaurant = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     ;
 });
 exports.getRestaurant = getRestaurant;
-//create meal
+//create restaurant
 const createRestaurant = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { _id } = req.restaurant;
-    const { role } = req.user.role;
+    const { name, type, description, address, url } = req.body;
     try {
-        const user = yield User_1.default.findOne({ _id: req.user.id });
-        if (role !== "admin")
-            return res
-                .status(401)
-                .json("Your request was processed but only admins are allowed to add or remove meals!");
-        else {
-            const restaurant = yield Restaurant_1.default.create({ usermeals: _id });
-            return res.status(200).json({ status: 200, restaurant });
-        }
-        ;
+        const newRestaurant = new Restaurant_1.default({
+            name,
+            type,
+            description,
+            address,
+            url
+        });
+        yield newRestaurant.save();
+        return res.status(200).json({ status: 200, message: 'Restaurant succesfully created', restaurant: newRestaurant });
     }
     catch (e) {
         console.error(e);
+        if (e.code === 11000) {
+            return res.status(400).json({ error: 'This restaurant already exists' });
+        }
         return res.status(500).json({ status: 500, message: 'Internal server error', error: e });
     }
     ;

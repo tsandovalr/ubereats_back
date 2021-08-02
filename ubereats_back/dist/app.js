@@ -8,6 +8,7 @@ const express_1 = __importDefault(require("express"));
 const passport_1 = __importDefault(require("passport"));
 const cors_1 = __importDefault(require("cors"));
 const passport_2 = __importDefault(require("./middlewares/passport"));
+const dotenv_1 = __importDefault(require("dotenv"));
 const app = express_1.default();
 const auth_1 = __importDefault(require("./routes/auth"));
 const user_1 = __importDefault(require("./routes/user"));
@@ -15,6 +16,8 @@ const meal_1 = __importDefault(require("./routes/meal"));
 const restaurant_1 = __importDefault(require("./routes/restaurant"));
 //settings
 app.set('port', process.env.PORT || 3000);
+//env
+dotenv_1.default.config({ path: './config/config.env' });
 //middlewares
 app.use(morgan_1.default('dev'));
 app.use(cors_1.default());

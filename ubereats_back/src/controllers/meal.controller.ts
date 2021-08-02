@@ -21,9 +21,9 @@ export const getMeals = async (req: any, res: Response) => {
 
 // Get a single meal
 export const getMeal = async (req: any, res: Response) => {
-  const {_id}=req.meal;
+  const {id}=req.params;
   try {
-    const meal = await Meal.find({usermeals: _id});
+    const meal = await Meal.findById(id);
     return res.status(200).json({ status: 200, meal });
 } catch (e) {
     console.error(e);
