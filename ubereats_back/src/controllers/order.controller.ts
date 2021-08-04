@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Order from '../models/Order';
+import User from '../models/User';
 import {IOrderDocument} from '../interfaces/IOrder'
 
 
@@ -38,7 +39,8 @@ try {
 
 
 export const getOrderById = async (req:any, res:Response) => {
-  const order = await Order.findById(req.params.id).populate(
+  const {id}= req.params;
+  const order = await Order.findById(id).populate(
     'user',
     'name email'
   )

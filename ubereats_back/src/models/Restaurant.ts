@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import geocoder from '../utils/geocoder';
-import {IRestaurantDocument} from '../interfaces/IRestaurant'
+import {IRestaurantDocument} from '../interfaces/IRestaurant';
+import Meal from './Meal';
 
 const restaurantSchema = new Schema({
     name: { 
@@ -34,12 +35,12 @@ const restaurantSchema = new Schema({
             type: Date,
             default: Date.now
           },
-    url: {
+          meals:[],
+
+        photo: {
         type:String, 
         required : true 
-    },
-    meals: [{ type: Schema.Types.ObjectId, ref: "Meal" }],
-    usersrestaurants: {type: Schema.Types.ObjectId}
+    }
 });
 
 // Geocode & create location

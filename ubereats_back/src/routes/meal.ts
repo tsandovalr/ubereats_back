@@ -8,15 +8,16 @@ import { getMeals, createMeal, getMeal, updateMeal, deleteMeal } from '../contro
 
 
 router.route('/meal')
-    .get(getMeals)
-    .post(createMeal)
+    .get(passport.authenticate('jwt', { session: false }),getMeals)
+    .post(passport.authenticate('jwt', { session: false }),createMeal)
     
 
 router.route('/meal:id')
-    .get(getMeal)
-    .put(updateMeal)
-    .patch(updateMeal)
-    .delete(deleteMeal)
+    .get(passport.authenticate('jwt', { session: false }),getMeal)
+    .put(passport.authenticate('jwt', { session: false }),updateMeal)
+    .patch(passport.authenticate('jwt', { session: false }),updateMeal)
+    .delete(passport.authenticate('jwt', { session: false }),deleteMeal)
 
-
+ 
+    
 export default router;

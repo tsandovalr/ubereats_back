@@ -3,7 +3,8 @@ import express from 'express';
 import passport from 'passport';
 import cors from 'cors';
 import passportMiddleware from './middlewares/passport';
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
+import fileUpload from 'express-fileupload';
 
 const app = express();
 
@@ -17,7 +18,7 @@ import orderRoutes from './routes/order';
 app.set('port', process.env.PORT || 3000);
 
 //env
-dotenv.config({ path: './config/config.env' });
+dotenv.config({ path: __dirname+'./config/config.env' });
 
 //middlewares
 app.use(morgan('dev'));
@@ -29,7 +30,10 @@ passport.use(passportMiddleware);
 app.use(cors({
     origin: true
 }));
-
+app.use(fileUpload({
+    useTempFiles : true,
+    tempFileDir : '/tmp/'
+}));
 //routes
 app.get('/', (req, res) => {
     res.send(`La API esta en http://localhost:${app.get('port')}`)

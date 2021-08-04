@@ -1,7 +1,7 @@
 import { Router } from 'express';
 const router = Router();
 
-
+import passport from 'passport';
 import {
   addOrderItems,
   getOrderById,
@@ -12,19 +12,16 @@ import {
 } from '../controllers/order.controller.js';
 
 router.route('/order')
-    .post(addOrderItems)
-    .get(getOrders)
+    .post(passport.authenticate('jwt', { session: false }),addOrderItems)
+    .get(passport.authenticate('jwt', { session: false }),getOrders)
 
 router.route('/order/:id')
-    .get(getOrderById)
+    .get(passport.authenticate('jwt', { session: false }),getOrderById)
 
 router.route('/order/:id/pay')
-    .put(updateOrderToPaid)
+    .put(passport.authenticate('jwt', { session: false }),updateOrderToPaid)
 
 router.route('/order/:id/deliver')
-    .put(updateOrderToDelivered)
-
-router.route('/order/:id/deliver')
-    .put(updateOrderToDelivered)
+    .put(passport.authenticate('jwt', { session: false }),updateOrderToDelivered)
 
 export default router;

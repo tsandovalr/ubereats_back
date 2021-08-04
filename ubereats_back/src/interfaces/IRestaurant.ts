@@ -1,5 +1,6 @@
 import { Document, Model } from "mongoose";
 export interface IRestaurant {
+  name:string
   address: any;
   location: any;
   coordinates:[Number],

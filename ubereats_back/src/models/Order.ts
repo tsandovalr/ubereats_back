@@ -1,4 +1,6 @@
 import { Schema, model } from 'mongoose';
+import geocoder from '../utils/geocoder';
+import {IClientAddressDocument} from '../interfaces/IClientAddress';
 
 
 const orderSchema = new Schema(
@@ -22,10 +24,23 @@ const orderSchema = new Schema(
         },
       ],
       shippingAddress: {
-        address: { type: String, required: true },
-        city: { type: String, required: true },
-        postalCode: { type: String, required: true },
-        country: { type: String, required: true },
+        type: String,
+        required: [true, 'Please add an address']
+      },
+      location: {
+        type: {
+          type: String,
+          enum: ['Point']
+        },
+        coordinates: {
+          type: [Number],
+          index: '2dsphere'
+        },
+        formattedAddress: String
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
       },
       paymentMethod: {
         type: String,
@@ -73,6 +88,20 @@ const orderSchema = new Schema(
       timestamps: true,
     }
   )
-  
+  // Geocode & create location
+orderSchema.pre('save', async function(this:IClientAddressDocument,next)  {
+
+  const loc = await geocoder.geocode(this.address);
+  this.location = {
+    type: 'Point',
+    coordinates: [loc[0].longitude, loc[0].latitude],
+    formattedAddress: loc[0].formattedAddress
+  };
+
+  // Do not save address
+  next();
+ 
+});
+
 export default model('Order', orderSchema);
 
