@@ -29,15 +29,23 @@ export const getRestaurants = async (req: any, res: Response) => {
 // Get list of meals of a specific restaurant
 
 export const getMealsOfRestaurant = async (req: any, res: Response) => {
-  const {id}=req.params;
+  try{
+  const mealsofrest = await Meal.aggregate(
+    [
+      {
+        $lookup:
+        {
+          from:"Restaurant",
+          localField:"restaurant",
+          foreignField: "_id",
+          as: "restaurantof"
+        }
+      }
+    ]
+  )
   
-  try {
-    
-    const restaurant = await Restaurant.findOne(id);
-    const rest =req.restaurant.name
-    const mealsofrest = await Meal.find({name: rest});
-
-    return res.status(200).json({ status: 200, restaurant, mealsofrest });
+  
+    return res.status(200).json({ status: 200, mealsofrest });
 } catch (e) {
     console.error(e);
     return res.status(500).json({ status: 500, message: 'Internal server error', error: e });
@@ -62,10 +70,10 @@ export const getRestaurant = async (req: any, res: Response) => {
 //create restaurant
 export const createRestaurant = async (req: any, res: Response) => {
   const body=req.body;
-  const files = req.files;
+  /* const files = req.files; */
   try {
     
-    if (!files || Object.keys(files).length === 0 || !files.photo ) {
+ /*   if (!files || Object.keys(files).length === 0 || !files.photo ) {
       res.status(400).json({
           done: false,
           msg: 'There is no photo uploaded, please try again.'
@@ -79,7 +87,7 @@ export const createRestaurant = async (req: any, res: Response) => {
         })
     } 
     const { secure_url } = await cloudinary.uploader.upload( isVerified )
-    body.photo = secure_url;
+    body.photo = secure_url; */
     const newRestaurant = new Restaurant(body);
 
     await newRestaurant.save();

@@ -35,11 +35,14 @@ const restaurantSchema = new Schema({
             type: Date,
             default: Date.now
           },
-          meals:[],
+          meals:{
+            type: Array,
+            default: []
+          },
 
         photo: {
         type:String, 
-        required : true 
+        required : false
     }
 });
 

@@ -17,7 +17,7 @@ router.route('/restaurant:id')
     .patch(passport.authenticate('jwt', { session: false }),updateRestaurant)
     .delete(passport.authenticate('jwt', { session: false }),deleteRestaurant)
 
-    router.route('/restaurant-meals:id')
+    router.route('/restaurantmeals:id')
     .get(passport.authenticate('jwt', { session: false }),getMealsOfRestaurant)
 export default router;
 getMealsOfRestaurant
